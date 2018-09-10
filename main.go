@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
 	"net/http"
 	"time"
@@ -21,6 +24,10 @@ const (
 	daikyo   fortune = "大凶"
 )
 
+type person struct {
+	Fortune fortune `json:"fortune"`
+}
+
 func main() {
 	rand.Seed(nowFunc().UnixNano())
 	http.HandleFunc("/", handler)
@@ -36,7 +43,25 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		result = drawFortune()
 	}
 
-	fmt.Fprint(w, result)
+	p := newPerson(result)
+	json, err := generateJSON(p)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Fprint(w, json)
+}
+
+func newPerson(f fortune) *person {
+	return &person{Fortune: f}
+}
+
+func generateJSON(p *person) (string, error) {
+	var buf bytes.Buffer
+	enc := json.NewEncoder(&buf)
+	if err := enc.Encode(p); err != nil {
+		return "", err
+	}
+	return buf.String(), nil
 }
 
 func drawFortune() fortune {

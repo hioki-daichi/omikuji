@@ -28,13 +28,13 @@ func TestMain_handler_ResponseBody(t *testing.T) {
 		seed     int64
 		expected string
 	}{
-		"KYOU":     {seed: 0, expected: "凶"},
-		"DAIKYOU":  {seed: 1, expected: "大凶"},
-		"SUEKICHI": {seed: 2, expected: "末吉"},
-		"KICHI":    {seed: 3, expected: "吉"},
-		"CHUKICHI": {seed: 4, expected: "中吉"},
-		"SHOKICHI": {seed: 5, expected: "小吉"},
-		"DAICHIKI": {seed: 9, expected: "大吉"},
+		"KYOU":     {seed: 0, expected: "{\"fortune\":\"凶\"}\n"},
+		"DAIKYOU":  {seed: 1, expected: "{\"fortune\":\"大凶\"}\n"},
+		"SUEKICHI": {seed: 2, expected: "{\"fortune\":\"末吉\"}\n"},
+		"KICHI":    {seed: 3, expected: "{\"fortune\":\"吉\"}\n"},
+		"CHUKICHI": {seed: 4, expected: "{\"fortune\":\"中吉\"}\n"},
+		"SHOKICHI": {seed: 5, expected: "{\"fortune\":\"小吉\"}\n"},
+		"DAICHIKI": {seed: 9, expected: "{\"fortune\":\"大吉\"}\n"},
 	}
 
 	for n, c := range cases {
@@ -83,7 +83,7 @@ func TestMain_handler_DuringTheNewYear(t *testing.T) {
 		t.Fatalf("err %s", err)
 	}
 
-	expected := "大吉"
+	expected := "{\"fortune\":\"大吉\"}\n"
 	actual := string(b)
 	if actual != expected {
 		t.Errorf(`unexpected response body: expected: "%s" actual: "%s"`, expected, actual)

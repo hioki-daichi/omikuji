@@ -33,7 +33,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		result = fortune.DrawFortune()
 	}
 
-	p := person.NewPerson(result)
+	nameParam := r.URL.Query().Get("name")
+	var name string
+	if nameParam != "" {
+		name = nameParam
+	} else {
+		name = "Gopher"
+	}
+	p := person.NewPerson(name, result)
 
 	json, err := jsonhelper.ToJSON(p)
 	if err != nil {

@@ -10,7 +10,7 @@ import (
 func TestPerson_NewPerson(t *testing.T) {
 	expected := "*person.Person"
 
-	p := NewPerson(fortune.Daikichi)
+	p := NewPerson("Gopher", fortune.Daikichi)
 
 	actual := reflect.TypeOf(p).String()
 	if actual != expected {

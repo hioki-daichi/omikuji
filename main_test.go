@@ -24,16 +24,18 @@ func TestMain_handler_StatusCode(t *testing.T) {
 
 func TestMain_handler_ResponseBody(t *testing.T) {
 	cases := map[string]struct {
-		seed     int64
-		expected string
+		seed      int64
+		nameParam string
+		expected  string
 	}{
-		"KYOU":     {seed: 0, expected: "{\"fortune\":\"凶\"}\n"},
-		"DAIKYOU":  {seed: 1, expected: "{\"fortune\":\"大凶\"}\n"},
-		"SUEKICHI": {seed: 2, expected: "{\"fortune\":\"末吉\"}\n"},
-		"KICHI":    {seed: 3, expected: "{\"fortune\":\"吉\"}\n"},
-		"CHUKICHI": {seed: 4, expected: "{\"fortune\":\"中吉\"}\n"},
-		"SHOKICHI": {seed: 5, expected: "{\"fortune\":\"小吉\"}\n"},
-		"DAICHIKI": {seed: 9, expected: "{\"fortune\":\"大吉\"}\n"},
+		"KYOU":       {seed: 0, nameParam: "", expected: "{\"name\":\"Gopher\",\"fortune\":\"凶\"}\n"},
+		"DAIKYOU":    {seed: 1, nameParam: "", expected: "{\"name\":\"Gopher\",\"fortune\":\"大凶\"}\n"},
+		"SUEKICHI":   {seed: 2, nameParam: "", expected: "{\"name\":\"Gopher\",\"fortune\":\"末吉\"}\n"},
+		"KICHI":      {seed: 3, nameParam: "", expected: "{\"name\":\"Gopher\",\"fortune\":\"吉\"}\n"},
+		"CHUKICHI":   {seed: 4, nameParam: "", expected: "{\"name\":\"Gopher\",\"fortune\":\"中吉\"}\n"},
+		"SHOKICHI":   {seed: 5, nameParam: "", expected: "{\"name\":\"Gopher\",\"fortune\":\"小吉\"}\n"},
+		"DAICHIKI":   {seed: 9, nameParam: "", expected: "{\"name\":\"Gopher\",\"fortune\":\"大吉\"}\n"},
+		"name param": {seed: 9, nameParam: "hioki-daichi", expected: "{\"name\":\"hioki-daichi\",\"fortune\":\"大吉\"}\n"},
 	}
 
 	for n, c := range cases {
@@ -43,6 +45,13 @@ func TestMain_handler_ResponseBody(t *testing.T) {
 
 			w := httptest.NewRecorder()
 			r := httptest.NewRequest("GET", "/", nil)
+
+			if c.nameParam != "" {
+				q := r.URL.Query()
+				q.Add("name", c.nameParam)
+				r.URL.RawQuery = q.Encode()
+			}
+
 			handler(w, r)
 			rw := w.Result()
 			defer rw.Body.Close()
@@ -77,7 +86,7 @@ func TestMain_handler_DuringTheNewYear(t *testing.T) {
 		t.Fatalf("err %s", err)
 	}
 
-	expected := "{\"fortune\":\"大吉\"}\n"
+	expected := "{\"name\":\"Gopher\",\"fortune\":\"大吉\"}\n"
 	actual := string(b)
 	if actual != expected {
 		t.Errorf(`unexpected response body: expected: "%s" actual: "%s"`, expected, actual)

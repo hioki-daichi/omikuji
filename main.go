@@ -1,87 +1,44 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
 	"time"
+
+	"github.com/hioki-daichi/omikuji-server/datehelper"
+	"github.com/hioki-daichi/omikuji-server/fortune"
+	"github.com/hioki-daichi/omikuji-server/jsonhelper"
+	"github.com/hioki-daichi/omikuji-server/person"
 )
 
 var nowFunc = time.Now
+var isDuringTheNewYearFunc = datehelper.IsDuringTheNewYear
 
-type fortune string
-
-const (
-	daikichi fortune = "大吉"
-	chukichi fortune = "中吉"
-	shokichi fortune = "小吉"
-	kichi    fortune = "吉"
-	suekichi fortune = "末吉"
-	kyo      fortune = "凶"
-	daikyo   fortune = "大凶"
-)
-
-type person struct {
-	Fortune fortune `json:"fortune"`
+func init() {
+	rand.Seed(nowFunc().UnixNano())
 }
 
 func main() {
-	rand.Seed(nowFunc().UnixNano())
 	http.HandleFunc("/", handler)
 	http.ListenAndServe(":8080", nil)
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	var result fortune
-
-	if isDuringTheNewYear() {
-		result = daikichi
+	var result fortune.Fortune
+	if isDuringTheNewYearFunc() {
+		result = fortune.Daikichi
 	} else {
-		result = drawFortune()
+		result = fortune.DrawFortune()
 	}
 
-	p := newPerson(result)
-	json, err := generateJSON(p)
+	p := person.NewPerson(result)
+
+	json, err := jsonhelper.ToJSON(p)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	fmt.Fprint(w, json)
-}
-
-func newPerson(f fortune) *person {
-	return &person{Fortune: f}
-}
-
-func generateJSON(p *person) (string, error) {
-	var buf bytes.Buffer
-	enc := json.NewEncoder(&buf)
-	if err := enc.Encode(p); err != nil {
-		return "", err
-	}
-	return buf.String(), nil
-}
-
-func drawFortune() fortune {
-	fs := allFortunes()
-	return fs[rand.Intn(len(fs))]
-}
-
-func allFortunes() []fortune {
-	return []fortune{daikichi, chukichi, shokichi, kichi, suekichi, kyo, daikyo}
-}
-
-func isDuringTheNewYear() bool {
-	loc, err := time.LoadLocation("Asia/Tokyo")
-	if err != nil {
-		panic(err)
-	}
-
-	_, month, day := nowFunc().In(loc).Date()
-	if month == time.January && (day == 1 || day == 2 || day == 3) {
-		return true
-	}
-	return false
 }

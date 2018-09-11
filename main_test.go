@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 )
 
 func TestMain_handler_StatusCode(t *testing.T) {
@@ -63,13 +62,8 @@ func TestMain_handler_ResponseBody(t *testing.T) {
 }
 
 func TestMain_handler_DuringTheNewYear(t *testing.T) {
-	loc, err := time.LoadLocation("Asia/Tokyo")
-	if err != nil {
-		t.Fatalf("err %s", err)
-	}
-
-	nowFunc = func() time.Time {
-		return time.Date(2019, time.January, 1, 0, 0, 0, 0, loc)
+	isDuringTheNewYearFunc = func() bool {
+		return true
 	}
 
 	w := httptest.NewRecorder()
@@ -87,40 +81,5 @@ func TestMain_handler_DuringTheNewYear(t *testing.T) {
 	actual := string(b)
 	if actual != expected {
 		t.Errorf(`unexpected response body: expected: "%s" actual: "%s"`, expected, actual)
-	}
-}
-
-func TestMain_isDuringTheNewYear(t *testing.T) {
-	loc, err := time.LoadLocation("Asia/Tokyo")
-	if err != nil {
-		t.Fatalf("err %s", err)
-	}
-
-	cases := map[string]struct {
-		year     int
-		month    time.Month
-		day      int
-		expected bool
-	}{
-		"2018-12-31": {year: 2018, month: time.December, day: 31, expected: false},
-		"2019-01-01": {year: 2019, month: time.January, day: 1, expected: true},
-		"2019-01-02": {year: 2019, month: time.January, day: 2, expected: true},
-		"2019-01-03": {year: 2019, month: time.January, day: 3, expected: true},
-		"2019-01-04": {year: 2019, month: time.January, day: 4, expected: false},
-	}
-
-	for n, c := range cases {
-		c := c
-		t.Run(n, func(t *testing.T) {
-			nowFunc = func() time.Time {
-				return time.Date(c.year, c.month, c.day, 0, 0, 0, 0, loc)
-			}
-
-			expected := c.expected
-			actual := isDuringTheNewYear()
-			if actual != expected {
-				t.Errorf(`expected: "%t" actual: "%t"`, expected, actual)
-			}
-		})
 	}
 }

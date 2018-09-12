@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/hioki-daichi/omikuji-server/datehelper"
+	"github.com/hioki-daichi/omikuji-server/form"
 	"github.com/hioki-daichi/omikuji-server/fortune"
 	"github.com/hioki-daichi/omikuji-server/jsonhelper"
-	"github.com/hioki-daichi/omikuji-server/person"
 )
 
 var nowFunc = time.Now
@@ -26,21 +26,14 @@ func main() {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	var result fortune.Fortune
+	var ftn fortune.Fortune
 	if isDuringTheNewYearFunc() {
-		result = fortune.Daikichi
+		ftn = fortune.Daikichi
 	} else {
-		result = fortune.DrawFortune()
+		ftn = fortune.DrawFortune()
 	}
 
-	nameParam := r.URL.Query().Get("name")
-	var name string
-	if nameParam != "" {
-		name = nameParam
-	} else {
-		name = "Gopher"
-	}
-	p := person.NewPerson(name, result)
+	p := form.NewRootForm(r).NewPerson(ftn)
 
 	json, err := jsonhelper.ToJSON(p)
 	if err != nil {

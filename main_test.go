@@ -94,6 +94,32 @@ func TestMain_handler_DuringTheNewYear(t *testing.T) {
 	}
 }
 
+func TestMain_handler_ValidationError(t *testing.T) {
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest("GET", "/", nil)
+	q := r.URL.Query()
+	q.Add("name", "123456789012345678901234567890123")
+	r.URL.RawQuery = q.Encode()
+	handler(w, r)
+	rw := w.Result()
+	defer rw.Body.Close()
+
+	b, err := ioutil.ReadAll(rw.Body)
+	if err != nil {
+		t.Fatalf("err %s", err)
+	}
+
+	if rw.StatusCode != http.StatusBadRequest {
+		t.Errorf(`unexpected status code: expected: %d actual: %d`, http.StatusBadRequest, rw.StatusCode)
+	}
+
+	expected := "{\"errors\":[\"Name is too long (maximum is 32 characters)\"]}\n"
+	actual := string(b)
+	if actual != expected {
+		t.Errorf(`unexpected response body: expected: "%s" actual: "%s"`, expected, actual)
+	}
+}
+
 func TestMain_handler_ToJSONError(t *testing.T) {
 	toJSONFunc = func(v interface{}) (string, error) {
 		return "", errors.New("error in TestMain_handler_ToJSONError")

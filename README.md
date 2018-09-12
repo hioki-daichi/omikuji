@@ -35,3 +35,14 @@ $ curl -s 'localhost:8080/?name=hioki-daichi' | jq .
   "fortune": "大凶"
 }
 ```
+
+The name can be up to 32 characters.
+
+```shell
+$ curl -s 'localhost:8080/?name=A%20name%20longer%20than%20thirty%20two%20characters' | jq .
+{
+  "errors": [
+    "Name is too long (maximum is 32 characters)"
+  ]
+}
+```

@@ -17,3 +17,15 @@ func TestPerson_NewPerson(t *testing.T) {
 		t.Errorf(`unexpected : expected: "%s" actual: "%s"`, expected, actual)
 	}
 }
+
+func TestPerson_Validate(t *testing.T) {
+	expected := "Name is too long (maximum is 32 characters)"
+
+	p := NewPerson("123456789012345678901234567890123", fortune.Daikichi)
+	p.Validate()
+
+	actual := p.Errors[0]
+	if actual != expected {
+		t.Errorf(`unexpected : expected: "%s" actual: "%s"`, expected, actual)
+	}
+}

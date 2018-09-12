@@ -39,7 +39,17 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	p := form.NewRootForm(r).NewPerson(ftn)
 
-	json, err := toJSONFunc(p)
+	p.Validate()
+
+	var v interface{}
+	if len(p.Errors) > 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		v = map[string][]string{"errors": p.Errors}
+	} else {
+		v = p
+	}
+
+	json, err := toJSONFunc(v)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

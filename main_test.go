@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
@@ -87,6 +88,29 @@ func TestMain_handler_DuringTheNewYear(t *testing.T) {
 	}
 
 	expected := "{\"name\":\"Gopher\",\"fortune\":\"大吉\"}\n"
+	actual := string(b)
+	if actual != expected {
+		t.Errorf(`unexpected response body: expected: "%s" actual: "%s"`, expected, actual)
+	}
+}
+
+func TestMain_handler_ToJSONError(t *testing.T) {
+	toJSONFunc = func(v interface{}) (string, error) {
+		return "", errors.New("error in TestMain_handler_ToJSONError")
+	}
+
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest("GET", "/", nil)
+	handler(w, r)
+	rw := w.Result()
+	defer rw.Body.Close()
+
+	b, err := ioutil.ReadAll(rw.Body)
+	if err != nil {
+		t.Fatalf("err %s", err)
+	}
+
+	expected := "Internal Server Error\n"
 	actual := string(b)
 	if actual != expected {
 		t.Errorf(`unexpected response body: expected: "%s" actual: "%s"`, expected, actual)

@@ -15,6 +15,7 @@ import (
 
 var nowFunc = time.Now
 var isDuringTheNewYearFunc = datehelper.IsDuringTheNewYear
+var toJSONFunc = jsonhelper.ToJSON
 
 func init() {
 	rand.Seed(nowFunc().UnixNano())
@@ -38,9 +39,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	p := form.NewRootForm(r).NewPerson(ftn)
 
-	json, err := jsonhelper.ToJSON(p)
+	json, err := toJSONFunc(p)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 
 	fmt.Fprint(w, json)

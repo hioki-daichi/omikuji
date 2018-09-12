@@ -1,3 +1,6 @@
+/*
+Package form provides methods to generate models from Form and Form from Request.
+*/
 package form
 
 import (

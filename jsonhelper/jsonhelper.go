@@ -1,5 +1,5 @@
 /*
-Package datehelper is a collection of convenient functions for manipulating JSON.
+Package jsonhelper is a collection of convenient functions for manipulating JSON.
 */
 package jsonhelper
 

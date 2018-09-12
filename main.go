@@ -26,6 +26,9 @@ func main() {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Header().Set("X-Content-Type-Options", "nosniff")
+
 	var ftn fortune.Fortune
 	if isDuringTheNewYearFunc() {
 		ftn = fortune.Daikichi

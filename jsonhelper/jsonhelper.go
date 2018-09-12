@@ -19,10 +19,12 @@ func ToJSON(v interface{}) (string, error) {
 	return buf.String(), nil
 }
 
+// for testing
 type encoder interface {
 	Encode(v interface{}) error
 }
 
+// for testing
 var newEncoderFunc = func(w io.Writer) encoder {
 	return json.NewEncoder(w)
 }

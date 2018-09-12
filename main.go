@@ -13,6 +13,7 @@ import (
 	"github.com/hioki-daichi/omikuji-server/jsonhelper"
 )
 
+// for testing
 var nowFunc = time.Now
 var isDuringTheNewYearFunc = datehelper.IsDuringTheNewYear
 var toJSONFunc = jsonhelper.ToJSON

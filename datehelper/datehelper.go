@@ -5,6 +5,7 @@ package datehelper
 
 import "time"
 
+// for testing
 var nowFunc = time.Now
 var loadLocationFunc = time.LoadLocation
 

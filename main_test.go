@@ -11,8 +11,8 @@ import (
 
 func TestMain_handler_StatusCode(t *testing.T) {
 	w := httptest.NewRecorder()
-	r := httptest.NewRequest("GET", "/", nil)
-	handler(w, r)
+	req := httptest.NewRequest("GET", "/", nil)
+	handler(w, req)
 	rw := w.Result()
 	defer rw.Body.Close()
 
@@ -45,15 +45,15 @@ func TestMain_handler_ResponseBody(t *testing.T) {
 			rand.Seed(c.seed)
 
 			w := httptest.NewRecorder()
-			r := httptest.NewRequest("GET", "/", nil)
+			req := httptest.NewRequest("GET", "/", nil)
 
 			if c.nameParam != "" {
-				q := r.URL.Query()
+				q := req.URL.Query()
 				q.Add("name", c.nameParam)
-				r.URL.RawQuery = q.Encode()
+				req.URL.RawQuery = q.Encode()
 			}
 
-			handler(w, r)
+			handler(w, req)
 			rw := w.Result()
 			defer rw.Body.Close()
 
@@ -77,8 +77,8 @@ func TestMain_handler_DuringTheNewYear(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	r := httptest.NewRequest("GET", "/", nil)
-	handler(w, r)
+	req := httptest.NewRequest("GET", "/", nil)
+	handler(w, req)
 	rw := w.Result()
 	defer rw.Body.Close()
 
@@ -96,11 +96,11 @@ func TestMain_handler_DuringTheNewYear(t *testing.T) {
 
 func TestMain_handler_ValidationError(t *testing.T) {
 	w := httptest.NewRecorder()
-	r := httptest.NewRequest("GET", "/", nil)
-	q := r.URL.Query()
+	req := httptest.NewRequest("GET", "/", nil)
+	q := req.URL.Query()
 	q.Add("name", "123456789012345678901234567890123")
-	r.URL.RawQuery = q.Encode()
-	handler(w, r)
+	req.URL.RawQuery = q.Encode()
+	handler(w, req)
 	rw := w.Result()
 	defer rw.Body.Close()
 
@@ -126,8 +126,8 @@ func TestMain_handler_ToJSONError(t *testing.T) {
 	}
 
 	w := httptest.NewRecorder()
-	r := httptest.NewRequest("GET", "/", nil)
-	handler(w, r)
+	req := httptest.NewRequest("GET", "/", nil)
+	handler(w, req)
 	rw := w.Result()
 	defer rw.Body.Close()
 

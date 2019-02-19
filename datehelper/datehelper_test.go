@@ -51,7 +51,7 @@ func TestDatehelper_IsDuringTheNewYear_Panic(t *testing.T) {
 		if err == nil {
 			t.Fatal("did not panic")
 		}
-		expected := "cannot find Nonexistent/Location in zip file "
+		expected := "unknown time zone Nonexistent/Location"
 		actual := err.(error).Error()
 		if !regexp.MustCompile(expected).MatchString(actual) {
 			t.Errorf(`unmatched error: expected: "%s" actual: "%s"`, expected, actual)

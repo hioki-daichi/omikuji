@@ -6,8 +6,8 @@ package form
 import (
 	"net/http"
 
-	"github.com/hioki-daichi/omikuji-server/fortune"
-	"github.com/hioki-daichi/omikuji-server/person"
+	"github.com/hioki-daichi/omikuji-server/internal/fortune"
+	"github.com/hioki-daichi/omikuji-server/internal/person"
 )
 
 // RootForm has name.

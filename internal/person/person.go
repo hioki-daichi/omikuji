@@ -4,7 +4,7 @@ Package person is a package that manages processing around person.
 package person
 
 import (
-	"github.com/hioki-daichi/omikuji-server/fortune"
+	"github.com/hioki-daichi/omikuji-server/internal/fortune"
 )
 
 // Person has Name and Fortune.

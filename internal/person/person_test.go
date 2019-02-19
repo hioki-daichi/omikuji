@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/hioki-daichi/omikuji-server/fortune"
+	"github.com/hioki-daichi/omikuji-server/internal/fortune"
 )
 
 func TestPerson_NewPerson(t *testing.T) {

@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/hioki-daichi/omikuji-server/datehelper"
-	"github.com/hioki-daichi/omikuji-server/form"
-	"github.com/hioki-daichi/omikuji-server/fortune"
-	"github.com/hioki-daichi/omikuji-server/jsonhelper"
+	"github.com/hioki-daichi/omikuji-server/internal/datehelper"
+	"github.com/hioki-daichi/omikuji-server/internal/form"
+	"github.com/hioki-daichi/omikuji-server/internal/fortune"
+	"github.com/hioki-daichi/omikuji-server/internal/jsonhelper"
 )
 
 // for testing

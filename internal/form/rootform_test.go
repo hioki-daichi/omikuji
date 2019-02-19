@@ -4,7 +4,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/hioki-daichi/omikuji-server/fortune"
+	"github.com/hioki-daichi/omikuji-server/internal/fortune"
 )
 
 func TestForm_NewRootForm(t *testing.T) {
